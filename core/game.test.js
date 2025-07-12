@@ -1,9 +1,11 @@
 import {Game} from "./game";
 import {GameStatus} from "../constants";
+import {Randomizer} from "./utils";
 
 describe('description....', ()=>{
     test('Check game initialization', () => {
-        const game = new Game();
+        const numberUtility = new Randomizer()
+        const game = new Game(numberUtility);
         game.settings = {
             gridSize: {
                 rows: 2,
@@ -18,7 +20,8 @@ describe('description....', ()=>{
     });
 
     test('Check start game', async () => {
-        const game = new Game();
+        const numberUtility = new Randomizer()
+        const game = new Game(numberUtility);
 
         expect(game.status).toBe(GameStatus.pending);
 
@@ -28,21 +31,25 @@ describe('description....', ()=>{
     });
 
     test('Check google position', async () => {
-        const game = new Game();
+        const numberUtility = new Randomizer()
+        const game = new Game(numberUtility);
 
         expect(game.googlePosition).toBeNull()
 
         await game.startGame()
+for(let i=0;i<100;i++){
+    expect(game.googlePosition.x).toBeLessThan(game.settings.gridSize.columns)
+    expect(game.googlePosition.x).toBeGreaterThanOrEqual(0)
+    expect(game.googlePosition.y).toBeLessThan(game.settings.gridSize.rows)
+    expect(game.googlePosition.y).toBeGreaterThanOrEqual(0)
+    expect(game.status).toBe(GameStatus.inProgress);
+}
 
-        expect(game.googlePosition.x).toBeLessThan(game.settings.gridSize.columns)
-        expect(game.googlePosition.x).toBeGreaterThanOrEqual(0)
-        expect(game.googlePosition.y).toBeLessThan(game.settings.gridSize.rows)
-        expect(game.googlePosition.y).toBeGreaterThanOrEqual(0)
-        expect(game.status).toBe(GameStatus.inProgress);
     });
     test('Check players position', () => {
+        const numberUtility = new Randomizer()
         for(let i = 0; i < 50; i++){
-            const game = new Game();
+            const game = new Game(numberUtility);
 
             game.settings = {
                 gridSize: {
@@ -52,6 +59,21 @@ describe('description....', ()=>{
             }
 
             expect(game.player1.position).not.toEqual(game.player2.position);
+            expect(game.player1.position.x).toBeLessThan(game.settings.gridSize.columns)
+        }
+    });
+    test('Cchecknew googleposition', async() => {
+        const numberUtility = new Randomizer()
+        const game = new Game(numberUtility);
+      game.googleJumpInterval=1
+        const delay =(ms)=> new Promise(res=>setTimeout(res,ms))
+        await game.startGame()
+        for(let i = 0; i < 50; i++){
+            const googlePos = game.googlePosition
+            await delay(1)
+           const newPos = game.googlePosition
+
+            expect(googlePos).not.toEqual(newPos);
         }
     });
 })
