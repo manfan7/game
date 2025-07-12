@@ -5,12 +5,13 @@ export class Game {
         gridSize: {
             rows: 2,
             columns: 2,
-        }
+        },
+        googleJumpInterval:1000
     };
     #status = GameStatus.pending;
     #player1
     #player2
-
+#googlePosition = null
     constructor() {
         this.#player1 = new Player(this.#getPlayerPosition());
         this.#player2 = new Player(this.#getPlayerPosition([this.#player1.position]));
@@ -31,8 +32,17 @@ export class Game {
     get player2() {
         return this.#player2
     }
+    get googlePosition(){
+        return this.#googlePosition
+    }
     startGame() {
+        if(this.#status!==GameStatus.pending){ throw  new Error('You can start onlu if settings mode')
+        }
         this.#status = GameStatus.inProgress
+        this.#googlePosition = {
+            x:0,
+            y:0
+        }
     }
 
     #getPlayerPosition(exceptionPositions = []) {
