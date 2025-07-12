@@ -99,13 +99,4 @@ export class Player {
     }
 }
 
-// #getRandomPosition() {
-//     let newX = NumberUtil.getRandomNumber(this.#settings.gridSize.x);
-//     let newY = NumberUtil.getRandomNumber(this.#settings.gridSize.y);
-//
-//     if (newX === this.#player1.position.x && newY === this.#player1.position.y) {
-//         return this.#getRandomPosition();
-//     }
-//
-//     return { x: newX, y: newY };
-// }
+
