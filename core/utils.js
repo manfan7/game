@@ -11,3 +11,6 @@ export class Randomizer {
         return Math.floor(Math.random() * (toExclusive - fromInclusive)) + fromInclusive;
     }
 }
+export function  checkWin(){
+
+}

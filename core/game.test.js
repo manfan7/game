@@ -1,4 +1,4 @@
-import {Game} from "./game";
+import {Game, GridSize, PositionService} from "./game";
 import {GameStatus} from "../constants";
 import {Randomizer} from "./utils";
 
@@ -78,11 +78,30 @@ describe('description....', () => {
     });
     test('player should move in corect direction', async () => {
         const numberUtility = new Randomizer()
-        const game = new Game(numberUtility,4,4,1000);
+        const settings = new GridSize()
+        const fakeNuberUtility = {
+            getRandomNumber(){
+                return 3
+            }
+        }
+        const positionService = new PositionService(settings,fakeNuberUtility)
+        const game = new Game(fakeNuberUtility,4,4,1000,positionService);
 
 
 game.startGame()
+        game.addPlayer(1)
 expect(game.settings.gridSize.rows).toBe(4)
-        expect(game.playerPosition.x).toBeLessThan(game.settings.gridSize.columns)
+        expect(game.playerPosition(1).x).toBeLessThan(game.settings.gridSize.columns)
+        game.movePlayer(1,'RIGHT')
+        expect(game.playerPosition(1)).toEqual({x:3,y:3})
+        game.movePlayer(1,'LEFT')
+        expect(game.playerPosition(1)).toEqual({x:2,y:3})
+        game.movePlayer(1,'UP')
+        expect(game.playerPosition(1)).toEqual({x:2,y:2})
+        game.movePlayer(1,'DOWN')
+        game.movePlayer(1,'RIGHT')
+        expect(game.playerPosition(1)).toEqual({x:3,y:3})
+        expect(game.googlePosition).toEqual({x:3,y:3})
+        expect(game.status).toEqual(GameStatus.Win)
     });
 })
