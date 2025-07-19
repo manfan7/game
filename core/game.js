@@ -3,15 +3,14 @@ import {directions, GameStatus} from "../constants.js"
 
 export class Game {
     #settings
+    #points = 0
     #status = GameStatus.pending;
-    #player1
-    #player2
     #interval = null
     #googlePosition = null
     #numberUtility
     #positionService
     #observers = []
-
+#endPoints=30
     constructor(utility, settings, positionService) {
         this.#numberUtility = utility
 
@@ -61,6 +60,19 @@ export class Game {
         return this.#status
     }
 
+    get points() {
+        return this.#points
+    }
+
+    set points(value) {
+        this.#endPoints = value
+    }
+
+    incrementPoints() {
+        this.#points += 1
+
+    }
+
     get googlePosition() {
         return this.#googlePosition
     }
@@ -80,13 +92,17 @@ export class Game {
         if (newPosition.x === this.googlePosition?.x && newPosition.y === this.googlePosition?.y) {
             return this.#googleSetPosition();
         }
+        this.incrementPoints()
         this.#googlePosition = newPosition;
         const winplayer = this.players.find(item => item.position.x === this.googlePosition.x && item.position.y === this.googlePosition.y)
         if (winplayer) {
             this.#status = GameStatus.Win
             clearInterval(this.#interval)
         }
-
+        if(this.points>=this.#endPoints){
+            this.#status =GameStatus.Loose
+            this.stopGame()
+        }
         return newPosition;
     }
 
@@ -95,8 +111,9 @@ export class Game {
             throw new Error('You can start onlu if settings mode')
         }
         this.#status = GameStatus.inProgress
-        this.#notify()
         this.#googleSetPosition()
+        this.#notify()
+
         this.#interval = setInterval(() => {
             this.#googleSetPosition()
             this.#notify()
@@ -105,15 +122,16 @@ export class Game {
 
     stopGame() {
         clearInterval(this.#interval)
+        this.#notify()
     }
 
     movePlayer(playerNumber, moveDirection) {
         const player = this.players.find(item => item.id === playerNumber);
-        if (!player) return false; // Игрок не найден
+        if (!player) return false;
 
         const otherPlayers = this.players.filter(item => item.id !== playerNumber);
 
-        // 2. Создаем новую позицию
+
         const newPosition = {...player.position};
 
         // 3. Обновляем координаты

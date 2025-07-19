@@ -1,7 +1,8 @@
 export const GameStatus = {
     pending: 'pending',
     inProgress: 'in_progress',
-    Win:'Win'
+    Win:'Win',
+    Loose: 'Loose',
 }
 export const directions ={
     UP:'UP',

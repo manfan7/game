@@ -20,8 +20,8 @@ export class Controller {
     #render(){
         const dto = {
             status: this.#game.status,
-            settings: this.#game.settings
-
+            settings: this.#game.settings,
+points: this.#game.points
         }
         this.#view.render(dto)
     }

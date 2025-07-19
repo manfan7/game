@@ -20,7 +20,7 @@ export class View {
         gameBoard.append(cell)
         wrapper.classList.add('wrapper')
 
-        p.append(`Status: ${dto.status}`)
+        p.append(`Status: ${dto.status} ${dto.points}`)
         header.append(`Game`)
         header.append(p)
         if (dto.status === GameStatus.pending) {
