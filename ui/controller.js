@@ -1,3 +1,5 @@
+
+
 export class Controller {
     #view
     #game
@@ -5,23 +7,26 @@ export class Controller {
     constructor(view, game) {
         this.#view = view
         this.#game = game
-        this.#game.subscribe(()=>{
+        this.#game.subscribe(() => {
             this.#render()
         })
-        this.#view.onStart = ()=>{
+        this.#view.onStart = () => {
             this.#game.startGame()
-
         }
     }
 
     init() {
-       this.#render()
+        this.#game.addPlayer(1,'Igor')
+        this.#render()
     }
-    #render(){
+
+    #render() {
         const dto = {
             status: this.#game.status,
-            settings: this.#game.settings,
-points: this.#game.points
+            points: this.#game.points,
+            gridsize: this.#game.settings.gridSize,
+            googlePosition: this.#game.googlePosition,
+            players: this.#game.getPlayers()
         }
         this.#view.render(dto)
     }

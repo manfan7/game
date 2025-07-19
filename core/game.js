@@ -6,7 +6,7 @@ export class Game {
     #points = 0
     #status = GameStatus.pending;
     #interval = null
-    #googlePosition = null
+    #googlePosition = []
     #numberUtility
     #positionService
     #observers = []
@@ -32,15 +32,17 @@ export class Game {
         this.#notify()
     }
 
-    addPlayer(id) {
+    addPlayer(id,name) {
         const position = this.#positionService.getRandomPosition(
             this.players.map(p => p.position)
         );
 
-        this.players.push(new Player(position, id));
+        this.players.push(new Player(position, id,name));
         this.#notify()
     }
-
+getPlayers(){
+        return this.players
+}
     set googleJumpInterval(value) {
         if (typeof value !== 'number') {
             throw new TypeError('check type of value, must be a number')
@@ -80,18 +82,13 @@ export class Game {
     playerPosition(id) {
         const player = this.players.find(item => item.id === id)
         if (player) {
-            return player.position
+            return {positionX:player.position.x,positionY:player.position.y,playerName:player.name}
         }
     }
 
     #googleSetPosition() {
-        const newPosition = {
-            x: this.#numberUtility.getRandomNumber(0, this.#settings.gridSize.columns),
-            y: this.#numberUtility.getRandomNumber(0, this.#settings.gridSize.rows)
-        }
-        if (newPosition.x === this.googlePosition?.x && newPosition.y === this.googlePosition?.y) {
-            return this.#googleSetPosition();
-        }
+
+        const newPosition = this.#positionService.getRandomPosition([this.#googlePosition])
         this.incrementPoints()
         this.#googlePosition = newPosition;
         const winplayer = this.players.find(item => item.position.x === this.googlePosition.x && item.position.y === this.googlePosition.y)
@@ -107,12 +104,13 @@ export class Game {
     }
 
     startGame() {
-        if (this.#status !== GameStatus.pending) {
+       /* if (this.#status !== GameStatus.pending) {
             throw new Error('You can start onlu if settings mode')
-        }
+        }*/
         this.#status = GameStatus.inProgress
+        this.#points=0
         this.#googleSetPosition()
-        this.#notify()
+            this.#notify()
 
         this.#interval = setInterval(() => {
             this.#googleSetPosition()
@@ -186,9 +184,10 @@ export class Game {
 }
 
 export class Player {
-    constructor(position, id) {
+    constructor(position, id,name) {
         this.position = position;
         this.id = id
+        this.name = name;
     }
 }
 

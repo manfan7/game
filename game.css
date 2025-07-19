@@ -20,19 +20,19 @@ body{
 }
 .game-board {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--columns), 1fr); /* Динамические колонки */
+    grid-template-rows: repeat(var(--rows), 1fr);
     gap: 5px;
     width: 90vmin; /* Используем vmin для адаптивности */
     height: 90vmin;
-    max-width: 400px; /* Максимальный размер */
-    max-height: 400px;
+
     margin: 20px auto;
-    background-color: #b894e8;
-    opacity: .3;
+
+
     padding: 5px;
     border-radius: 5px;
     box-sizing: border-box;
+    background-color: #b894e8;
     border:3px solid #9f2566
 }
 @media (max-width: 500px) {
@@ -53,6 +53,7 @@ body{
     border: 1px solid darkred;
     border-radius: 3px;
     transition: .4s;
+    opacity: .8;
 }
 
 .cell:hover {
@@ -62,4 +63,10 @@ body{
 .player {
     height: 24px;
     width: 24px;
+}
+.google-image {
+    background-image: url("./assets/image/logo.png");
+   background-size: contain;
+    background-position: center;
+    opacity: 1;
 }
