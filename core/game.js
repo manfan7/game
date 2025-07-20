@@ -65,7 +65,9 @@ getPlayers(){
     get points() {
         return this.#points
     }
-
+get endPoints() {
+        return this.#endPoints
+}
     set points(value) {
         this.#endPoints = value
     }
@@ -94,7 +96,7 @@ getPlayers(){
         const winplayer = this.players.find(item => item.position.x === this.googlePosition.x && item.position.y === this.googlePosition.y)
         if (winplayer) {
             this.#status = GameStatus.Win
-            clearInterval(this.#interval)
+           this.stopGame()
         }
         if(this.points>=this.#endPoints){
             this.#status =GameStatus.Loose
@@ -133,21 +135,24 @@ getPlayers(){
         const newPosition = {...player.position};
 
         // 3. Обновляем координаты
-        switch (moveDirection) {
-            case directions.UP:
-                newPosition.y -= 1;
+        if(this.points<=this.#endPoints && this.#status === GameStatus.inProgress){
+            switch (moveDirection) {
+                case directions.UP:
+                    newPosition.y -= 1;
 
-                break;
-            case directions.DOWN:
-                newPosition.y += 1;
-                break;
-            case directions.LEFT:
-                newPosition.x -= 1;
-                break;
-            case directions.RIGHT:
-                newPosition.x += 1;
-                break;
+                    break;
+                case directions.DOWN:
+                    newPosition.y += 1;
+                    break;
+                case directions.LEFT:
+                    newPosition.x -= 1;
+                    break;
+                case directions.RIGHT:
+                    newPosition.x += 1;
+                    break;
+            }
         }
+
 
         // 4. Проверка границ поля
         if (newPosition.x < 0 || newPosition.x >= this.settings.gridSize.columns ||

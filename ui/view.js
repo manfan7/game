@@ -3,24 +3,22 @@ import {directions, GameStatus} from "../constants.js";
 export class View {
     constructor() {
         document.addEventListener('keyup',(e)=>{
-
-            switch (e.code){
-
-                case 'ArrowUp':
-                    this?.onPlayerMoove(1,directions.UP)
-                    break
-                case 'ArrowDown':
-                    this?.onPlayerMoove(1,directions.DOWN)
-                    break
-                case 'ArrowLeft':
-                    this?.onPlayerMoove(1,directions.LEFT)
-                    break
-                case 'ArrowRight':
-                    this?.onPlayerMoove(1,directions.RIGHT)
-                    break
-                default:
-                    return
+            const directionMap = {
+                'ArrowUp': directions.UP,
+                'KeyW': directions.UP,
+                'ArrowDown': directions.DOWN,
+                'KeyS': directions.DOWN,
+                'ArrowLeft': directions.LEFT,
+                'KeyA': directions.LEFT,
+                'ArrowRight': directions.RIGHT,
+                'KeyD': directions.RIGHT
+            };
+            const direction = directionMap[e.code];
+            if(direction){
+                this?.onPlayerMoove(1,direction)
+                this?.onPlayerMoove(2,direction)
             }
+
         })
     }
     render(dto) {
@@ -31,7 +29,7 @@ export class View {
 
         const field = new GridComponent()
         const gameBoard = field.render(dto)
-        const headertemp = new HeaderComponent({dto,onStart:this.onStart})
+        const headertemp = new HeaderComponent({dto,onStart:this?.onStart,onAdd:this?.addPlayer})
         const header = headertemp.render()
 
         wrapper.append(header, gameBoard)
@@ -56,12 +54,18 @@ class HeaderComponent{
         input.classList.add('header-input')
         addButton.classList.add('add-button')
         addButton.textContent = 'Add Player'
+        addButton.addEventListener('click',()=>{
+            const name = input.value
+            if(!this.#props.dto.players.find(item=>item.id===2)&&this.#props.dto.status===GameStatus.pending){
+                this.#props.onAdd(name)
+            }
+        })
         header.append(`Game`)
 
         const button = new ButtonComponent({onStart: this.#props.onStart})
         const btnStart = button.render()
         const restartButn = button.render('Press to restart game')
-        p.append(`Status: ${this.#props?.dto.status} ${this.#props?.dto.points}`)
+        p.append(`Points from start: ${this.#props?.dto.points}`)
         if (this.#props.dto.status === GameStatus.pending ||this.#props. dto.status === GameStatus.Loose) {
             header.append(btnStart)
         }
@@ -69,7 +73,7 @@ class HeaderComponent{
             header.append(restartButn)
         }
         this.#props.dto.players.forEach(player=> {
-        playerContainer.append(player.name)
+        playerContainer.innerHTML+=`<div>${player.name}</div>`
         })
         header.append(p,input,addButton,playerContainer)
         return header
@@ -100,6 +104,8 @@ class GridComponent {
         gameBoard.classList.add('game-board');
         gameBoard.style.setProperty('--columns', dto.gridsize.columns);
         gameBoard.style.setProperty('--rows', dto.gridsize.rows);
+        const winner = new WinnerComponent()
+        const winnerboard= winner.render(dto)
         const player1 =  dto.players.find(item=>item.id===1)
         const player2 =  dto.players.find(item=>item.id===2)||undefined
         for (let y = 0; y < dto.gridsize.rows; y++) {
@@ -117,7 +123,23 @@ class GridComponent {
                 gameBoard.appendChild(cell);
             }
         }
-
+gameBoard.append(winnerboard)
         return gameBoard
+    }
+}
+class WinnerComponent{
+    render(dto) {
+        const winnerboard=document.createElement('div')
+        winnerboard.classList.add('winnerboard')
+        console.log(dto.endpoints,dto.points)
+        const text = dto.status===GameStatus.Win?`Your Score is ${dto.endpoints-dto.points}`: `You are looser.Try again`
+        console.log()
+        if(dto.status===GameStatus.Loose||dto.status===GameStatus.Win){
+            winnerboard.classList.add('show')
+            winnerboard.append(text)
+        }
+
+
+        return winnerboard
     }
 }

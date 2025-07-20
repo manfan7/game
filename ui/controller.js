@@ -14,8 +14,10 @@ export class Controller {
             this.#game.startGame()
         }
         this.#view.onPlayerMoove = (id,direction) => {
-
             this.#game.movePlayer(id,direction)
+        }
+        this.#view.addPlayer = (name)=>{
+            this.#game.addPlayer(2,name)
         }
     }
 
@@ -28,6 +30,7 @@ export class Controller {
         const dto = {
             status: this.#game.status,
             points: this.#game.points,
+            endpoints: this.#game.endPoints,
             gridsize: this.#game.settings.gridSize,
             googlePosition: this.#game.googlePosition,
             players: this.#game.getPlayers()
