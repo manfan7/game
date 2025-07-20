@@ -1,6 +1,28 @@
-import {GameStatus} from "../constants.js";
+import {directions, GameStatus} from "../constants.js";
 
 export class View {
+    constructor() {
+        document.addEventListener('keyup',(e)=>{
+
+            switch (e.code){
+
+                case 'ArrowUp':
+                    this?.onPlayerMoove(1,directions.UP)
+                    break
+                case 'ArrowDown':
+                    this?.onPlayerMoove(1,directions.DOWN)
+                    break
+                case 'ArrowLeft':
+                    this?.onPlayerMoove(1,directions.LEFT)
+                    break
+                case 'ArrowRight':
+                    this?.onPlayerMoove(1,directions.RIGHT)
+                    break
+                default:
+                    return
+            }
+        })
+    }
     render(dto) {
         const rootElement = document.getElementById('root');
         rootElement.innerHTML = '';
@@ -72,25 +94,25 @@ class ButtonComponent {
 }
 
 class GridComponent {
-    constructor({appLayerMoove}) {
-        document.addEventListener('keyup',(e)=>{
-            switch (e.code){
-                case 'ArrowUp':
-                    appLayerMoove(1,)
-            }
-        })
-    }
+
     render(dto) {
         const gameBoard = document.createElement('div');
         gameBoard.classList.add('game-board');
         gameBoard.style.setProperty('--columns', dto.gridsize.columns);
         gameBoard.style.setProperty('--rows', dto.gridsize.rows);
+        const player1 =  dto.players.find(item=>item.id===1)
+        const player2 =  dto.players.find(item=>item.id===2)||undefined
         for (let y = 0; y < dto.gridsize.rows; y++) {
             for (let x = 0; x < dto.gridsize.columns; x++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
          if(dto.googlePosition.x===x&&dto.googlePosition.y===y){
              cell.classList.add('google-image')
+         }
+         else if(player1.position.x===x&&player1.position.y===y){
+             cell.classList.add('player1')
+         } else if(player2&&player2.position.x===x&&player2.position.y===y){
+             cell.classList.add('player2')
          }
                 gameBoard.appendChild(cell);
             }

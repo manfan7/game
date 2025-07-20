@@ -13,6 +13,10 @@ export class Controller {
         this.#view.onStart = () => {
             this.#game.startGame()
         }
+        this.#view.onPlayerMoove = (id,direction) => {
+
+            this.#game.movePlayer(id,direction)
+        }
     }
 
     init() {

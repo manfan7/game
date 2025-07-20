@@ -136,6 +136,7 @@ getPlayers(){
         switch (moveDirection) {
             case directions.UP:
                 newPosition.y -= 1;
+
                 break;
             case directions.DOWN:
                 newPosition.y += 1;

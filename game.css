@@ -54,19 +54,23 @@ body{
     border-radius: 3px;
     transition: .4s;
     opacity: .8;
+    background-size: contain;
+    background-position: center;
 }
 
 .cell:hover {
     background-color: #362155;
     filter: saturate(2);
 }
-.player {
-    height: 24px;
-    width: 24px;
-}
+
 .google-image {
     background-image: url("./assets/image/logo.png");
-   background-size: contain;
-    background-position: center;
+      opacity: 1;
+}
+.player1{
+    background-image: url("./assets/image/player1.jpg");
     opacity: 1;
+}
+.player2{
+    background-image: url("./assets/image/player2.jpg");
 }
