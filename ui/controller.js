@@ -1,3 +1,4 @@
+import {GameStatus} from "../constants.js";
 
 
 export class Controller {
@@ -14,11 +15,15 @@ export class Controller {
             this.#game.startGame()
         }
         this.#view.onPlayerMoove = (id,direction) => {
-            this.#game.movePlayer(id,direction)
+            if(this.#game.status!==GameStatus.pending){
+                this.#game.movePlayer(id,direction)
+            }
+
         }
         this.#view.addPlayer = (name)=>{
             this.#game.addPlayer(2,name)
         }
+        this.#view.status = this.#game.status
     }
 
     init() {

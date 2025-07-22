@@ -3,21 +3,24 @@ import {directions, GameStatus} from "../constants.js";
 export class View {
     constructor() {
         document.addEventListener('keyup',(e)=>{
-            const directionMap = {
-                'ArrowUp': directions.UP,
-                'KeyW': directions.UP,
-                'ArrowDown': directions.DOWN,
-                'KeyS': directions.DOWN,
-                'ArrowLeft': directions.LEFT,
-                'KeyA': directions.LEFT,
-                'ArrowRight': directions.RIGHT,
-                'KeyD': directions.RIGHT
-            };
-            const direction = directionMap[e.code];
-            if(direction){
-                this?.onPlayerMoove(1,direction)
-                this?.onPlayerMoove(2,direction)
-            }
+
+               const directionMap = {
+                   'ArrowUp': directions.UP,
+                   'KeyW': directions.UP,
+                   'ArrowDown': directions.DOWN,
+                   'KeyS': directions.DOWN,
+                   'ArrowLeft': directions.LEFT,
+                   'KeyA': directions.LEFT,
+                   'ArrowRight': directions.RIGHT,
+                   'KeyD': directions.RIGHT
+               };
+               const direction = directionMap[e.code];
+               if(direction){
+                   this?.onPlayerMoove(1,direction)
+                   this?.onPlayerMoove(2,direction)
+               }
+
+
 
         })
     }
@@ -135,7 +138,7 @@ class WinnerComponent{
         const text = dto.status===GameStatus.Win?`Your Score is ${dto.endpoints-dto.points}`: `You are looser.Try again`
         console.log()
         if(dto.status===GameStatus.Loose||dto.status===GameStatus.Win){
-            winnerboard.classList.add('show')
+            setTimeout(() => winnerboard.classList.add('show'));
             winnerboard.append(text)
         }
 
