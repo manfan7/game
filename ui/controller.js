@@ -15,7 +15,7 @@ export class Controller {
             this.#game.startGame()
         }
         this.#view.onPlayerMoove = (id,direction) => {
-            if(this.#game.status!==GameStatus.pending){
+            if(this.#game.status===GameStatus.inProgress){
                 this.#game.movePlayer(id,direction)
             }
 
