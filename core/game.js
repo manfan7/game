@@ -115,6 +115,7 @@ get endPoints() {
             this.#notify()
 
         this.#interval = setInterval(() => {
+
             this.#googleSetPosition()
             this.#notify()
         }, this.#settings.googleJumpInterval)
