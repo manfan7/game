@@ -23,23 +23,29 @@ export class Controller {
         this.#view.addPlayer = (name)=>{
             this.#game.addPlayer(2,name)
         }
-        this.#view.status = this.#game.status
+        if(this.#game.status){
+            this.#view.status = this.#game.status
+        }
+
     }
 
     init() {
-        this.#game.addPlayer(1,'Igor')
+
+
         this.#render()
     }
 
     #render() {
+
         const dto = {
             status: this.#game.status,
             points: this.#game.points,
             endpoints: this.#game.endPoints,
             gridsize: this.#game.settings.gridSize,
             googlePosition: this.#game.googlePosition,
-            players: this.#game.getPlayers()
+            players: this.#game.Players
         }
+
         this.#view.render(dto)
     }
 }

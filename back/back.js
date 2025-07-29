@@ -1,31 +1,35 @@
 import {Randomizer} from "../core/utils.js";
 import {WebSocketServer} from 'ws';
 import {Game, GridSize, PositionService} from "../core/game.js";
+import {logPlugin} from "@babel/preset-env/lib/debug.js";
 
 const numberUtility = new Randomizer();
 
 const settings = new GridSize()
 const positionService = new PositionService(settings, numberUtility)
 const game = new Game(numberUtility, settings, positionService);
-game.startGame()
+//game.startGame()
 
 function  createDto(){
     const data = {
         status: game.status,
         points: game.points,
         endpoints: game.endPoints,
-        gridsize: game.settings.gridSize,
+        gridsize: game.settings,
         googlePosition: game.googlePosition,
-        players: game.getPlayers()
+        players: game.getPlayers()??[{position:{x:1,y:1},id:1,name:'Igor'}]
     }
     return data
 }
+
+
 const wss = new WebSocketServer({
     port: 3001
 });
 
 wss.on('connection', function connection(tunnel) {
 game.subscribe(()=>{
+
     tunnel.send(JSON.stringify(createDto()))
 })
     tunnel.send(JSON.stringify(createDto()))

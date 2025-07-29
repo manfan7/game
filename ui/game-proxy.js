@@ -3,7 +3,8 @@
 
 export class GameProxy {
 #observers=[]
-#socket
+#socket = null
+    #statecashe = null
     constructor(utility, settings, positionService) {
  /*       this.#numberUtility = utility
 
@@ -12,11 +13,15 @@ export class GameProxy {
         this.players = []*/
         this.#socket = new WebSocket('ws://localhost:3001')
         this.#socket.addEventListener('message', (e) => {
-            const receivedData = JSON.parse(e.data)
-            console.log(receivedData)
+            console.log(e.data)
+            this.#statecashe = JSON.parse(e.data)
+            this.#notify()
         })
     }
 
+get initilized(){
+    return this.#statecashe!==null
+}
     subscribe(observer) {
         this.#observers.push(observer)
     }
@@ -32,25 +37,26 @@ export class GameProxy {
     addPlayer(id,name) {
 
     }
-getPlayers(){
-
+get Players(){
+    return this.#statecashe?.players ?? [];
 }
     set googleJumpInterval(value) {
 
     }
 
     get settings() {
-
+return this.#statecashe.gridsize
     }
 
     get status() {
-
+return this.#statecashe.status
     }
 
     get points() {
-
+        return this.#statecashe.points
     }
 get endPoints() {
+    return this.#statecashe.endPoints
 
 }
     set points(value) {
@@ -63,7 +69,7 @@ get endPoints() {
     }
 
     get googlePosition() {
-
+return this.#statecashe.googlePosition
     }
 
 

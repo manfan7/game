@@ -7,5 +7,11 @@ const view = new View();
 
 const game = new GameProxy();
 
-const controller = new Controller(view, game);
-controller.init()
+const controller = new Controller(view, game); // ✅ создаём только когда state готов
+
+const intervalId = setInterval(() => {
+    if (game.initilized) {
+        controller.init()
+        clearInterval(intervalId);
+    }
+}, 100)

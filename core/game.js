@@ -111,6 +111,7 @@ get endPoints() {
         }*/
         this.#status = GameStatus.inProgress
         this.#points=0
+        this.addPlayer(1,'Igor')
         this.#googleSetPosition()
             this.#notify()
 
