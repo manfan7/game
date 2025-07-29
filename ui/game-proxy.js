@@ -3,12 +3,18 @@
 
 export class GameProxy {
 #observers=[]
+#socket
     constructor(utility, settings, positionService) {
  /*       this.#numberUtility = utility
 
         this.#settings = settings
         this.#positionService = positionService
         this.players = []*/
+        this.#socket = new WebSocket('ws://localhost:3001')
+        this.#socket.addEventListener('message', (e) => {
+            const receivedData = JSON.parse(e.data)
+            console.log(receivedData)
+        })
     }
 
     subscribe(observer) {
