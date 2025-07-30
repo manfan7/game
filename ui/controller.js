@@ -30,8 +30,6 @@ export class Controller {
     }
 
     init() {
-
-
         this.#render()
     }
 
@@ -41,11 +39,12 @@ export class Controller {
             status: this.#game.status,
             points: this.#game.points,
             endpoints: this.#game.endPoints,
-            gridsize: this.#game.settings.gridSize,
+            gridsize: this.#game.settings,
             googlePosition: this.#game.googlePosition,
-            players: this.#game.Players
+            players: this.#game.Players??[{position:{x:1,y:1},id:1,name:'Igor'}]
         }
 
         this.#view.render(dto)
     }
+
 }

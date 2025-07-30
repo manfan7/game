@@ -5,23 +5,32 @@ export class GameProxy {
 #observers=[]
 #socket = null
     #statecashe = null
-    constructor(utility, settings, positionService) {
- /*       this.#numberUtility = utility
-
-        this.#settings = settings
-        this.#positionService = positionService
-        this.players = []*/
-        this.#socket = new WebSocket('ws://localhost:3001')
+    #readyCallback = null;
+    constructor() {
+        this.#socket = new WebSocket('ws://localhost:3001');
         this.#socket.addEventListener('message', (e) => {
-            console.log(e.data)
-            this.#statecashe = JSON.parse(e.data)
-            this.#notify()
-        })
+            this.#statecashe = JSON.parse(e.data);
+            this.#notify();
+
+            // ✅ первый раз получили данные — вызываем инициализацию
+            if (this.#readyCallback) {
+                this.#readyCallback();
+                this.#readyCallback = null; // Чтобы не вызывать дважды
+            }
+        });
     }
 
-get initilized(){
-    return this.#statecashe!==null
-}
+    onReady(callback) {
+        if (this.initilized) {
+            callback(); // если уже готов — сразу
+        } else {
+            this.#readyCallback = callback;
+        }
+    }
+
+    get initilized() {
+        return this.#statecashe !== null;
+    }
     subscribe(observer) {
         this.#observers.push(observer)
     }
@@ -38,18 +47,18 @@ get initilized(){
 
     }
 get Players(){
-    return this.#statecashe?.players ?? [];
+    return this.#statecashe?.players??[{position:{x:1,y:1},id:1,name:'Igor'}] ;
 }
     set googleJumpInterval(value) {
 
     }
 
     get settings() {
-return this.#statecashe.gridsize
+        return this.#statecashe?.settings ?? new GridSize();
     }
 
     get status() {
-return this.#statecashe.status
+        return this.#statecashe?.status ?? 'pending';
     }
 
     get points() {
@@ -77,7 +86,8 @@ return this.#statecashe.googlePosition
 
 
     startGame() {
-
+        const action = {type: 'start'};
+this.#socket.send(JSON.stringify(action));
     }
 
     stopGame() {
@@ -85,6 +95,8 @@ return this.#statecashe.googlePosition
     }
 
     movePlayer(playerNumber, moveDirection) {
+const action = {type: 'move', playerNumber, moveDirection};
+this.#socket.send(JSON.stringify(action));
     }
 
 }

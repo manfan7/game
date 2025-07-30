@@ -15,3 +15,8 @@ const intervalId = setInterval(() => {
         clearInterval(intervalId);
     }
 }, 100)
+/*
+game.onReady(() => {
+    const controller = new Controller(view, game);
+    controller.init();
+});*/

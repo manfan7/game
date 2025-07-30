@@ -113,6 +113,7 @@ class GridComponent {
         const player2 =  dto.players.find(item=>item.id===2)||undefined
         for (let y = 0; y < dto.gridsize.rows; y++) {
             for (let x = 0; x < dto.gridsize.columns; x++) {
+
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
          if(dto.googlePosition.x===x&&dto.googlePosition.y===y){

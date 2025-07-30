@@ -1,14 +1,15 @@
 import {Randomizer} from "../core/utils.js";
 import {WebSocketServer} from 'ws';
 import {Game, GridSize, PositionService} from "../core/game.js";
-import {logPlugin} from "@babel/preset-env/lib/debug.js";
+
+
 
 const numberUtility = new Randomizer();
 
 const settings = new GridSize()
 const positionService = new PositionService(settings, numberUtility)
 const game = new Game(numberUtility, settings, positionService);
-//game.startGame()
+//
 
 function  createDto(){
     const data = {
@@ -19,6 +20,7 @@ function  createDto(){
         googlePosition: game.googlePosition,
         players: game.getPlayers()??[{position:{x:1,y:1},id:1,name:'Igor'}]
     }
+
     return data
 }
 
@@ -32,6 +34,18 @@ game.subscribe(()=>{
 
     tunnel.send(JSON.stringify(createDto()))
 })
+    tunnel.on('message', function(msg){
+        const action = JSON.parse(msg.data.toString());
+switch(action.type){
+    case 'start':
+        game.startGame()
+        break
+    case 'move':{
+        game.movePlayer(action.playerNumber,action.moveDirection)
+        break
+    }
+}
+    })
     tunnel.send(JSON.stringify(createDto()))
  /*   const gameEventEmitter = game.eventEmitter;
 
