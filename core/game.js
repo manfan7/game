@@ -112,6 +112,7 @@ get endPoints() {
         this.#status = GameStatus.inProgress
         this.#points=0
         this.#googleSetPosition()
+
             this.#notify()
 
         this.#interval = setInterval(() => {
